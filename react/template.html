@@ -3,7 +3,7 @@
 
   <head>
     <meta charset="utf-8">
-    <title>React Counter</title>
+    <title>React Carousel</title>
 
     <script src="../lib/react.js"></script>
     <script src="../lib/react-dom.js"></script>
@@ -17,38 +17,104 @@
     <div id="app"></div>
 
     <script type="text/babel">
-      var Counter = React.createClass({
-        getInitialState() {
-          return {
-            count: 0,
-            title: 'React Counter'
-          };
-        },
-        increment() {
-          this.setState({count: this.state.count + 1});
-        },
-        decrement() {
-          if (this.state.count > 0) this.setState({count: this.state.count - 1});
-        },
+      const imagePaths = ["../images/image-1.jpg", "../images/image-2.jpg", "../images/image-3.jpg", "../images/image-4.jpg"];
+      
+      const Arrow = React.createClass({
         render() {
+          const { type, onClick } = this.props;
+
           return (
-            <div>
-              <h1 className="app-title">{ this.state.title }</h1>
-              <div className="app-current-count">
-                { this.state.count }
-              </div>
-              <div className="app-counter-buttons">
-                <button type="button" name="decrement" onClick={this.decrement}>-</button>
-                <button type="button" name="increment" onClick={this.increment}>+</button>
-              </div>
+            <button type="button" name={type} onClick={() => onClick()}>
+              <i className={`icon ${type}-icon`}></i>
+            </button>
+          );
+        }
+      });
+
+      const Tracker = React.createClass({
+        render() {
+          const { selected, onClick } = this.props;
+
+          return (
+            <li>
+              <i className={`icon tracker-icon ${selected ? 'selected' : ''}`} onClick={onClick}></i>
+            </li>
+          );
+        }
+      });
+
+      const Image = React.createClass({
+        render() {
+          const { active, src } = this.props;
+          return (
+            <div className={`displayed-image ${active ? 'active' : ''}`}>
+              <img src={src} />  
             </div>
           );
         }
-        });
+      })
+      
+      var Carousel = React.createClass({
+        getInitialState() {
+          return {
+            currentImageIndex: 0,
+            title: 'React Carousel'
+          };
+        },
+        next() {
+          const { currentImageIndex } = this.state;
+          const nextIndex = currentImageIndex === this.props.images.length - 1 ? 0 : currentImageIndex + 1
+          
+          this.switchImage(nextIndex);
+        },
+        previous() {
+          const { currentImageIndex } = this.state;
+          const prevIndex = currentImageIndex === 0 ? this.props.images.length - 1 : currentImageIndex - 1;
+          
+          this.switchImage(prevIndex);
+        },
+        switchImage(index) {
+          this.setState({currentImageIndex: index});
+        },
+        render() {
+          const { images } = this.props;
+          const { title, currentImageIndex } = this.state;
+          const currentImage = images[currentImageIndex];
 
-        ReactDOM.render(<Counter />, document.getElementById('app'));
+          return (
+            <div className="carousel">
+              {
+                images.map((image, i) => <Image key={`image-${i}`} src={image} active={i === currentImageIndex} />)
+              }
+              <h1 className="app-title">{title}</h1>
+              <div className="arrow next">
+                <Arrow type="previous" onClick={this.previous}/>
+              </div>
+              <div className="arrow previous">
+                <Arrow type="next" onClick={this.next}/>
+              </div>
+              <ol className="image-tracker">
+                {
+                  images.map((image, i) => (
+                    <Tracker key={`tracker-${i}`} selected={currentImageIndex === i} onClick={() => this.switchImage(i)} />
+                  ))
+                } 
+              </ol>
+            </div>
+          );
+        }
+      });
 
-      </script>
+      var App = React.createClass({
+        render() {
+          return (
+            <Carousel images={imagePaths} />
+          );
+        }
+      })
+
+      ReactDOM.render(<App />, document.getElementById('app'));
+    </script>
 
   </body>
 </html>

@@ -1,29 +1,107 @@
 body {
   font-family: "Arial", sans-serif;
+  margin: 0;
   text-align: center;
 }
 
+.carousel {
+  position: relative;
+}
+
 .app-title {
+  position: absolute;
+  top: 25%;
+  left: 20%;
   font-size: 24px;
 }
 
-.app-current-count {
-  background: #f3f3f3;
-  border: 1px solid #d8d8d8;
-  border-radius: 2px;
-  box-shadow: 0 2px 2px #00000014;
+.displayed-image {
+  opacity: 0;
+  height: 0;
+  transition: opacity 0.5s ease-in;
+}
+
+.displayed-image.active {
+  opacity: 1;
+  height: auto
+}
+
+.displayed-image img {
+  width: 100%;
+  height: 100%;
+  max-width: 100vw;
+  max-height: 100vh;
+}
+
+.arrow {
+  position: absolute;
   display: inline-block;
-  font-size: 48px;
-  padding: 12px 24px;
-}
-
-.app-counter-buttons {
-  margin: 24px;
-}
-
-.app-counter-buttons button {
-  font-size: 24px;
-  margin: 0 8px;
   -webkit-appearance: none;
-  width: 60px;
+  top: 50%;
+}
+
+.arrow.next {
+  left: 1%
+}
+
+.arrow.previous {
+  right: 1%;
+}
+
+.arrow button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  opacity: 0.6;
+  outline: 0;
+}
+
+.arrow button:hover {
+  opacity: 0.2;
+}
+
+.icon:before {
+  content: '';
+  display: inline-block;
+  border: solid;
+  height: 8px;
+  width: 8px;
+}
+
+.next-icon:before, .previous-icon:before {
+  border-width: 0 4px 4px 0;
+}
+
+.next-icon:before {
+  transform: rotate(-45deg);
+}
+
+.previous-icon:before {
+  transform: rotate(135deg);
+}
+
+.image-tracker {
+  position: absolute;
+  list-style: none;
+  width: 100%;
+  padding: 0;
+  bottom: 1%;
+  opacity: 0.6;
+}
+
+.image-tracker li {
+  display: inline;
+}
+
+.tracker-icon:before {
+  background: lightgray;
+  border-radius: 10px;
+  border-color: gray;
+  margin: 0 0.5rem;
+  transition: background 1s ease-in-out;
+  cursor: pointer;
+}
+
+.tracker-icon.selected:before {
+  background: transparent;
 }
